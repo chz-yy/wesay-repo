@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chat.wesay.mapper.FriendshipMapper">
+
+    <resultMap id="BaseResultMap" type="com.chat.wesay.pojo.Friendship">
+            <id property="friendshipId" column="friendship_id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="friendId" column="friend_id" jdbcType="BIGINT"/>
+            <result property="friendshipStatus" column="friendship_status" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        friendship_id,user_id,friend_id,
+        friendship_status,create_time
+    </sql>
+
+    <select id="selectRequestFriend" resultType="com.chat.wesay.pojo.Response.FriendShipResponse">
+        SELECT f.friendship_id as friendshipId, f.user_id AS friendId, u.username AS friendName
+        FROM friendship f
+                 INNER JOIN user u ON f.user_id = u.user_id
+        WHERE f.friend_id = #{userId} AND f.friendship_status = 0
+    </select>
+
+    <select id="selectFriendInfo" resultType="com.chat.wesay.pojo.Response.FriendShipResponse">
+        SELECT f.friendship_id as friendshipId,
+               f.friend_id AS friendId, u.username AS friendName,
+               u.avatar as friendAvatar
+        FROM friendship f
+                 INNER JOIN user u ON f.friend_id = u.user_id
+        WHERE f.user_id = #{userId} AND f.friendship_status = 1
+    </select>
+
+
+</mapper>
