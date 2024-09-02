@@ -1,6 +1,17 @@
 pipeline {
 
     stages {
+        stage('Checkout Code') {
+            steps {
+                sshagent(['chz-ssh']) {
+                    // 拉取 Git 仓库的代码
+                    checkout([$class: 'GitSCM',
+                              branches: [[name: '*/main']],  // 指定要拉取的分支
+                              userRemoteConfigs: [[url: 'git@github.com:chz-yy/wesay-repo.git']]
+                    ])
+                }
+            }
+        }
         stage('Prepare') {
             agent any
             steps {
